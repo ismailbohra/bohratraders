@@ -1,7 +1,8 @@
 const httpStatus = require("http-status-codes");
-const Product =require('../models')
 const ApiError = require("../utils/ApiError");
 const pick = require("../utils/pick");
+const { Product } = require("../models");
+
 
 const createProduct = async (userBody) => {
   try {

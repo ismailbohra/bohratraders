@@ -1,11 +1,11 @@
 const mongoose=require('mongoose')
+const { v4: uuid } = require('uuid');
 
 const productSchema = mongoose.Schema(
   {
     productId: {
       type: String,
       unique: true,
-      required: [true, "productId is required"],
     },
     Name: {
       type: String,
@@ -27,7 +27,14 @@ const productSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-
+productSchema.pre("save", function (next) {
+  if (this.isNew) {
+    if (!this.productId || typeof this.productId !== "string") {
+      this.productId = uuid();
+    }
+  }
+  next();
+});
 const product = mongoose.model("product", productSchema);
 
 module.exports= product;

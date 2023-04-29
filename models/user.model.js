@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require('validator');
+const { v4: uuid } = require('uuid');
+const bcrypt = require('bcryptjs');
 
 const userSchema = mongoose.Schema(
   {
@@ -13,8 +15,9 @@ const userSchema = mongoose.Schema(
     },
     role: [
       {
-        roleId: { type: Number },
-        roleName: { type: String },
+        id: { type: Number },
+        user_type: { type: String },
+        active:{type: String}
       },
     ],
     firstName: {
@@ -78,6 +81,7 @@ const userSchema = mongoose.Schema(
       district: String,
       pincode: Number,
     },
+    orders:[  {type:String}  ]
   },
   { timestamps: true }
 );
@@ -102,7 +106,14 @@ userSchema.pre("save", function (next) {
   }
   next();
 });
-
+userSchema.pre('save', async function (next) {
+  const user = this;
+  if (user.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+  next();
+});
 const user = mongoose.model("user", userSchema);
 
 module.exports = user;

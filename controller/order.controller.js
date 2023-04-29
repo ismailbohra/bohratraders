@@ -3,17 +3,17 @@ const {
   successResponseGenerator,
   errorResponse,
 } = require("../utils/ApiHelpers");
-const {productService} = require("../services");
+const {orderService} = require("../services");
 
-const registerProduct = async (req, res) => {
+const registerOrder = async (req, res) => {
   try {
-    await productService.createProduct(req.body);
+    await orderService.createOrder(req);
     res
       .status(httpStatus.CREATED)
       .send(
         successResponseGenerator(
           httpStatus.CREATED,
-          "product created successfully",
+          "order created successfully",
           req.body.email
         )
       );
@@ -23,13 +23,13 @@ const registerProduct = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
-const getProduct = async (req, res) => {
+const getOrder = async (req, res) => {
   try {
-    const user = await productService.getProduct(req);
+    const user = await orderService.getOrder(req);
     res
       .status(httpStatus.OK)
       .send(
-        successResponseGenerator(httpStatus.OK, "product List Successful", user)
+        successResponseGenerator(httpStatus.OK, "order List fetched Successful", user)
       );
   } catch (error) {
     res
@@ -37,15 +37,15 @@ const getProduct = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
-const updateProduct = async (req, res) => {
+const updateOrder = async (req, res) => {
   try {
-    const user = await productService.updateProduct(req);
+    const user = await orderService.updateOrder(req);
     res
       .status(httpStatus.OK)
       .send(
         successResponseGenerator(
           httpStatus.OK,
-          "product updated sucessfuly",
+          "order updated sucessfuly",
           req.body
         )
       );
@@ -55,15 +55,15 @@ const updateProduct = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
-const deleteProduct = async (req, res) => {
+const deleteOrder = async (req, res) => {
   try {
-    const user = await productService.deleteProduct(req);
+    const user = await orderService.deleteOrder(req);
     res
       .status(httpStatus.OK)
       .send(
         successResponseGenerator(
           httpStatus.OK,
-          "product removed Successful",
+          "order removed Successful",
           user.role
         )
       );
@@ -74,8 +74,8 @@ const deleteProduct = async (req, res) => {
   }
 };
 module.exports = {
-  registerProduct,
-  getProduct,
-  updateProduct,
-  deleteProduct,
+  registerOrder,
+  getOrder,
+  updateOrder,
+  deleteOrder,
 };

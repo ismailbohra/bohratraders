@@ -5,7 +5,7 @@ const pick = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const registerUser = async (userBody) => {
-  const session = await user.startSession();
+  const session = await userModel.startSession();
   try {
     session.startTransaction();
     if (await userModel.isEmailTaken(userBody.email)) {
