@@ -42,7 +42,7 @@ const registerUser = async (userBody) => {
 
 const getUser = async (req) => {
   try {
-    const filter = pick(req.query, ["isEmailVerified", "mobileNo", "userId"]);
+    const filter = pick(req.query, ["email", "mobileNo", "userId"]);
     const user = await userModel.find(filter, { password: 0 });
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "User Not Found");

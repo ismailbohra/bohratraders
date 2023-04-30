@@ -7,7 +7,7 @@ const productSchema = mongoose.Schema(
       type: String,
       unique: true,
     },
-    Name: {
+    name: {
       type: String,
       required: [true, "Name is required"],
     },
@@ -15,10 +15,10 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: [true, "price is required"],
     },
-    Featured: {
+    featured: {
       type: Boolean,
     },
-    Rating: {
+    rating: {
       type: Number,
     },
     company: {

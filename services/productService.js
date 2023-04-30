@@ -1,6 +1,6 @@
 const httpStatus = require("http-status-codes");
 const ApiError = require("../utils/ApiError");
-const pick = require("../utils/pick");
+const {pick,generateRegexQuery} = require("../utils/pick");
 const { Product } = require("../models");
 
 
@@ -20,8 +20,11 @@ const createProduct = async (userBody) => {
 };
 const getProduct = async (req) => {
   try {
-    const filter = pick(req.query);
-    const user = await Product.find(filter);
+    const filter = pick(req.query,["productId","price","featured","name"]);
+    const { findParams, sortParams } =generateRegexQuery(req.query,["productId","price","featured","name"])
+    console.log(findParams)
+    console.log(sortParams)
+    const user = await Product.find(findParams).sort(sortParams);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "Product Not Found");
     }
