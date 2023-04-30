@@ -20,10 +20,7 @@ const createProduct = async (userBody) => {
 };
 const getProduct = async (req) => {
   try {
-    const filter = pick(req.query,["productId","price","featured","name"]);
     const { findParams, sortParams } =generateRegexQuery(req.query,["productId","price","featured","name"])
-    console.log(findParams)
-    console.log(sortParams)
     const user = await Product.find(findParams).sort(sortParams);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "Product Not Found");

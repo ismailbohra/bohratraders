@@ -76,8 +76,21 @@ const loginUserWithEmailAndPassword = async (email, password) => {
         "Login Failed! Incorrect password"
       );
     const token = jwtEncode(user.userId, email);
-    user.token=token
-    return user;
+    const userdata={
+      _id:user._id,
+        firstName:user.firstName,
+        lastName:user.lastName,
+        mobileNo:user.mobileNo,
+        email:user.email,
+        orders:user.orders,
+        role:user.role,
+        createdAt:user.createdAt,
+        updatedAt:user.updatedAt,
+        userId:user.userId,
+        __v:user.__v,
+        token:token
+    }
+    return userdata;
   } catch (error) {
     console.error("Login by email service has error", error.message);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
