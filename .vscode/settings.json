@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/59069569-9e6d-4ae0-af56-cc9ea936e190/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/shoparel",
+    "appService.deploySubpath": "."
+}

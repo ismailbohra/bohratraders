@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { userModel } = require("../models");
 const ApiError = require("../utils/ApiError");
-const pick = require("../utils/pick");
+const {pick} = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const registerUser = async (userBody) => {
