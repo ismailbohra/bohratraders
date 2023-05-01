@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { orderModel, userModel } = require("../models");
 const ApiError = require("../utils/ApiError");
-const pick = require("../utils/pick");
+const {pick} = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const createOrder = async (req) => {
@@ -87,7 +87,22 @@ const deleteOrder = async (req) => {
     session.endSession();
   }
 };
-const getOrder = async (req) => {};
+const getOrder = async (req) => {
+  try {
+    const filter = pick(req.query, ["userId", "orderId"]);
+    const user = await orderModel.find(filter, { password: 0 });
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, "order Not Found");
+    }
+    return user;
+  } catch (error) {
+    console.error("Order Service -> getAll got error " + error.message);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Something went wrong"
+    );
+  }
+};
 module.exports = {
   createOrder,
   updateOrder,
