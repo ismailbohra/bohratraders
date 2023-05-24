@@ -20,7 +20,7 @@ const createProduct = async (userBody) => {
 };
 const getProduct = async (req) => {
   try {
-    const { findParams, sortParams } =generateRegexQuery(req.query,["productId","price","featured","name"])
+    const { findParams, sortParams } =generateRegexQuery(req.query,["id","price","featured","name"])
     const user = await Product.find(findParams).sort(sortParams);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "Product Not Found");
@@ -36,7 +36,7 @@ const getProduct = async (req) => {
 };
 const updateProduct = async (req) => {
   try {
-    const user = await Product.findOne({ productId: req.body.productId });
+    const user = await Product.findOne({ id: req.body.id });
     if (!user) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
@@ -44,7 +44,7 @@ const updateProduct = async (req) => {
       );
     }
 
-    await Product.findOneAndUpdate({ productId: req.body.productId }, req.body);
+    await Product.findOneAndUpdate({ id: req.body.id }, req.body);
   } catch (error) {
     console.error("product update service has error", error.message);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -52,7 +52,7 @@ const updateProduct = async (req) => {
 };
 const deleteProduct = async (req) => {
   try {
-    const user = await Product.deleteOne({ productId: req.body.productId });
+    const user = await Product.deleteOne({ id: req.body.id });
     if (!user) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,

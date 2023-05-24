@@ -5,23 +5,20 @@ const {pick} = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const createOrder = async (req) => {
-  const session = await orderModel.startSession();
+  const session = await userModel.startSession();
   try {
     session.startTransaction();
-    const user = await userModel.findOne({ usreId: req.body.userId });
+    const user = await userModel.findOne({ userId: req.body.userId });
+    console.log(user)
     if (!user) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "user not found");
     }
-    const order = await orderModel.create(req.body);
-    if (!order) {
-      throw new ApiError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "order create service not worked"
-      );
-    }
+
+    const order = user.orders
+    order.push(req.body.order)
     await userModel.findOneAndUpdate(
       { userId: req.body.userId },
-      { $push: { orders: user.orders } }
+      { orders:order }
     );
 
     await session.commitTransaction();
@@ -36,14 +33,24 @@ const createOrder = async (req) => {
 };
 
 const updateOrder = async (req) => {
-  const session = await orderModel.startSession();
+  const session = await userModel.startSession();
   try {
     session.startTransaction();
-    const orderOld = await orderModel.findOne({ orderId: req.body.orderId });
+    const orderOld = await userModel.findOne({ "orders.orderId": req.body.orderId });
     if (!orderOld) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "order not found");
     }
-    const updateorder = await orderModel.findOneAndUpdate({orderId:req.body.orderId},req.body);
+    const new_order=orderOld.orders.map((element)=>{
+      if (element.orderId==req.body.orderId) {
+        return req.body
+      }
+      return element
+    })
+    console.log(new_order)
+    const updateorder= await userModel.findOneAndUpdate(
+      {  "orders.orderId": req.body.orderId},
+      { orders:new_order }
+    );
     if (!updateorder) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
