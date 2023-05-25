@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { orderModel, userModel } = require("../models");
 const ApiError = require("../utils/ApiError");
-const {pick} = require("../utils/pick");
+const { pick, processQueryForOrder } = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const createOrder = async (req) => {
@@ -9,16 +9,16 @@ const createOrder = async (req) => {
   try {
     session.startTransaction();
     const user = await userModel.findOne({ userId: req.body.userId });
-    console.log(user)
+    console.log(user);
     if (!user) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "user not found");
     }
 
-    const order = user.orders
-    order.push(req.body.order)
+    const order = user.orders;
+    order.push(req.body.order);
     await userModel.findOneAndUpdate(
       { userId: req.body.userId },
-      { orders:order }
+      { orders: order }
     );
 
     await session.commitTransaction();
@@ -36,20 +36,21 @@ const updateOrder = async (req) => {
   const session = await userModel.startSession();
   try {
     session.startTransaction();
-    const orderOld = await userModel.findOne({ "orders.orderId": req.body.orderId });
+    const orderOld = await userModel.findOne({
+      "orders.orderId": req.body.orderId,
+    });
     if (!orderOld) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "order not found");
     }
-    const new_order=orderOld.orders.map((element)=>{
-      if (element.orderId==req.body.orderId) {
-        return req.body
+    const new_order = orderOld.orders.map((element) => {
+      if (element.orderId == req.body.orderId) {
+        return req.body;
       }
-      return element
-    })
-    console.log(new_order)
-    const updateorder= await userModel.findOneAndUpdate(
-      {  "orders.orderId": req.body.orderId},
-      { orders:new_order }
+      return element;
+    });
+    const updateorder = await userModel.findOneAndUpdate(
+      { "orders.orderId": req.body.orderId },
+      { orders: new_order }
     );
     if (!updateorder) {
       throw new ApiError(
@@ -72,15 +73,22 @@ const deleteOrder = async (req) => {
   const session = await orderModel.startSession();
   try {
     session.startTransaction();
-    const orderOld = await orderModel.findOne({ orderId: req.body.orderId });
+    const orderOld = await userModel.findOne({
+      "orders.orderId": req.body.orderId,
+    });
     if (!orderOld) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "order not found");
     }
-    const deleteorder = await orderModel.findOneAndDelete({orderId:req.body.orderId});
-    if (!deleteorder) {
+    const new_order = orderOld.orders.filter(element => element.orderId !== req.body.orderId);
+
+    const updateorder = await userModel.findOneAndUpdate(
+      { "orders.orderId": req.body.orderId },
+      { orders: new_order }
+    );
+    if (!updateorder) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "order delete service not worked"
+        "order update service not worked"
       );
     }
 
@@ -96,8 +104,8 @@ const deleteOrder = async (req) => {
 };
 const getOrder = async (req) => {
   try {
-    const filter = pick(req.query, ["userId", "orderId"]);
-    const user = await orderModel.find(filter, { password: 0 });
+    const filter = processQueryForOrder(req.query, ["userId", "orderId"]);
+    const user = await userModel.find(filter, { password: 0 });
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "order Not Found");
     }

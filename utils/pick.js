@@ -62,5 +62,16 @@ function generateRegexQuery(query, possibleAttributes) {
   return { findParams, sortParams };
 }
 
+function processQueryForOrder(query, keys) {
+  const result = {};
 
-module.exports = { pick, generateRegexQuery };
+  if (keys.includes("userId") && query.userId) {
+    result.userId = query.userId;
+  } else if (keys.includes("orderId") && query.orderId) {
+    result['orders.orderId'] = query.orderId;
+  }
+
+  return result;
+}
+
+module.exports = { pick, generateRegexQuery,processQueryForOrder };
