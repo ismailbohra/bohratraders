@@ -70,7 +70,7 @@ const updateOrder = async (req) => {
   }
 };
 const deleteOrder = async (req) => {
-  const session = await orderModel.startSession();
+  const session = await userModel.startSession();
   try {
     session.startTransaction();
     const orderOld = await userModel.findOne({
