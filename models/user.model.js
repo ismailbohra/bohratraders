@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
-const { v4: uuid } = require('uuid');
-const bcrypt = require('bcryptjs');
+const validator = require("validator");
+const { v4: uuid } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema(
   {
@@ -83,7 +83,7 @@ const userSchema = mongoose.Schema(
     },
     orders: [
       {
-        orderId: { type: String, unique: true , default: uuid},
+        orderId: { type: String, unique: true, default: uuid },
         productList: [
           {
             productId: { type: String },
@@ -96,6 +96,22 @@ const userSchema = mongoose.Schema(
           mode: { type: String },
           amount: { type: Number },
           status: { type: String },
+        },
+        CreatedAt: {
+          type: String,
+          default: () => {
+            const currentDate = new Date();
+            return currentDate.toLocaleDateString("en-GB");
+          },
+        },
+        deliveryInformation: {
+          name: { type: String },
+          mobile: { type: String },
+          email: { type: String },
+          city: { type: String },
+          state: { type: String },
+          zipCode: { type: String },
+          address: { type: String },
         },
       },
     ],
@@ -123,7 +139,7 @@ userSchema.pre("save", async function (next) {
     }
   }
 
-  if (this.isModified('password')) {
+  if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }

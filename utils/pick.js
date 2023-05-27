@@ -68,7 +68,13 @@ function processQueryForOrder(query, keys) {
   if (keys.includes("userId") && query.userId) {
     result.userId = query.userId;
   } else if (keys.includes("orderId") && query.orderId) {
-    result['orders.orderId'] = query.orderId;
+    result['orders'] = {
+      '$elemMatch':{
+        'orderId':query.orderId
+      }
+    }
+  }else if (keys.includes("status") && query.status) {
+    result['orders.status'] = query.status;
   }
 
   return result;

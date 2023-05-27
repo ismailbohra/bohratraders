@@ -3,7 +3,7 @@ const {
   successResponseGenerator,
   errorResponse,
 } = require("../utils/ApiHelpers");
-const {orderService} = require("../services");
+const { orderService } = require("../services");
 
 const registerOrder = async (req, res) => {
   try {
@@ -29,7 +29,11 @@ const getOrder = async (req, res) => {
     res
       .status(httpStatus.OK)
       .send(
-        successResponseGenerator(httpStatus.OK, "order List fetched Successful", user)
+        successResponseGenerator(
+          httpStatus.OK,
+          "order List fetched Successful",
+          user
+        )
       );
   } catch (error) {
     res
@@ -37,6 +41,7 @@ const getOrder = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
+
 const updateOrder = async (req, res) => {
   try {
     const user = await orderService.updateOrder(req);

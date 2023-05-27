@@ -1,8 +1,7 @@
 const httpStatus = require("http-status");
-const { orderModel, userModel } = require("../models");
+const { userModel } = require("../models");
 const ApiError = require("../utils/ApiError");
-const { pick, processQueryForOrder } = require("../utils/pick");
-const { jwtEncode } = require("../middlewares/authorization");
+const { processQueryForOrder } = require("../utils/pick");
 
 const createOrder = async (req) => {
   const session = await userModel.startSession();
@@ -79,7 +78,9 @@ const deleteOrder = async (req) => {
     if (!orderOld) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "order not found");
     }
-    const new_order = orderOld.orders.filter(element => element.orderId !== req.body.orderId);
+    const new_order = orderOld.orders.filter(
+      (element) => element.orderId !== req.body.orderId
+    );
 
     const updateorder = await userModel.findOneAndUpdate(
       { "orders.orderId": req.body.orderId },
@@ -104,8 +105,31 @@ const deleteOrder = async (req) => {
 };
 const getOrder = async (req) => {
   try {
-    const filter = processQueryForOrder(req.query, ["userId", "orderId"]);
-    const user = await userModel.find(filter, { password: 0 });
+    const filter = processQueryForOrder(req.query, [
+      "userId",
+      "orderId",
+      "status",
+    ]);
+    if (req.query.orderId) {
+      const user = await userModel.find(
+        {
+          "orders.orderId": req.query.orderId,
+        },
+        {
+          _id: 0,
+          orders: {
+            $elemMatch: {
+              orderId: req.query.orderId,
+            },
+          },
+        }
+      );
+      if (!user) {
+        throw new ApiError(httpStatus.NOT_FOUND, "order Not Found");
+      }
+      return user;
+    }
+    const user = await userModel.find(filter);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "order Not Found");
     }
@@ -118,6 +142,7 @@ const getOrder = async (req) => {
     );
   }
 };
+
 module.exports = {
   createOrder,
   updateOrder,
