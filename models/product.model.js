@@ -3,9 +3,8 @@ const { v4: uuid } = require('uuid');
 
 const productSchema = mongoose.Schema(
   {
-    id: {
-      type: Number,
-      required: [true, 'ID is required'],
+    productId: {
+      type: String,
       unique: true,
     },
     brand: {

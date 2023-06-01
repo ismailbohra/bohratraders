@@ -18,6 +18,9 @@ const userSchema = mongoose.Schema(
         id: { type: Number },
         user_type: { type: String },
         active: { type: String },
+        Power:[
+          {type: String}
+        ]
       },
     ],
     firstName: {
@@ -91,12 +94,14 @@ const userSchema = mongoose.Schema(
             color: { type: String },
           },
         ],
-        status: { type: String },
+        status: { type: String,default:'PENDING' },
         payment: {
           mode: { type: String },
           amount: { type: Number },
-          status: { type: String },
+          status: { type: String ,default:'PENDING'},
+          remaining: { type: String },
         },
+        remark:{type : String},
         CreatedAt: {
           type: String,
           default: () => {

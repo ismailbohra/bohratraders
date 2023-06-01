@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const masterSchema = mongoose.Schema(
   {
     id: {
-      type: String,
+      type: Number,
       unique: true,
     },
     user_type: {

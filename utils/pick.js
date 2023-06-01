@@ -43,7 +43,9 @@ function generateRegexQuery(query, possibleAttributes) {
     if (query[attr]) {
       if (attr === 'name' || attr === 'productId') {
         findParams[attr] = new RegExp('^' + query[attr] , 'i');
-      } else {
+      } else if (attr === 'id') {
+        findParams[attr]=query[attr]
+      }else {
         findParams[attr] = new RegExp(query[attr], 'i');
       }
     }

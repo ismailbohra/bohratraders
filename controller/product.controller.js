@@ -37,6 +37,20 @@ const getProduct = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
+const getProductsById = async (req, res) => {
+  try {
+    const user = await productService.getProductsById(req);
+    res
+      .status(httpStatus.OK)
+      .send(
+        successResponseGenerator(httpStatus.OK, "product List Successful", user)
+      );
+  } catch (error) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
+  }
+};
 const updateProduct = async (req, res) => {
   try {
     const user = await productService.updateProduct(req);
@@ -78,4 +92,5 @@ module.exports = {
   getProduct,
   updateProduct,
   deleteProduct,
+  getProductsById
 };

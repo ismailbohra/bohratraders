@@ -15,7 +15,7 @@ const assignRole = async (requestBody) => {
     const newRole=await masterModel.findOne({id:requestBody.roleId})
     const roles=user.role
     if (index !== -1) {
-      roles[index].active = "0";
+      roles[index].active = "1";
     } else {
       roles.push(newRole);
     }
