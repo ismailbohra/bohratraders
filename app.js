@@ -31,8 +31,20 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options('*', cors());
+// app.use(cors());
+// app.options('*', cors());
+const whitelist = ["http://localhost:3000"]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
+}
+app.use(cors(corsOptions))
 
 // Setting View Engine
 app.set('view engine', 'ejs');
