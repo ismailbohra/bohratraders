@@ -7,14 +7,14 @@ const {productService} = require("../services");
 
 const registerProduct = async (req, res) => {
   try {
-    await productService.createProduct(req.body);
+    const productId=await productService.createProduct(req);
     res
       .status(httpStatus.CREATED)
       .send(
         successResponseGenerator(
           httpStatus.CREATED,
           "product created successfully",
-          req.body.email
+          productId
         )
       );
   } catch (error) {
@@ -87,10 +87,39 @@ const deleteProduct = async (req, res) => {
       .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
   }
 };
+const uploadProductImg = async (req, res) => {
+  try {
+    const image_link = await productService.uploadProductImg(req,res);
+    res
+      .status(httpStatus.OK)
+      .send(
+        successResponseGenerator(
+          httpStatus.OK,
+          "product image updated Successful",
+          image_link
+        )
+      );
+  } catch (error) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse(httpStatus.BAD_REQUEST, error.message));
+  }
+};
+const getProductPhotograph = async (req, res) => {
+  try {
+    const file = await productService.getProductImage(req, res);
+    res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+    res.end(file, 'binary');
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(errorResponse(httpStatus.INTERNAL_SERVER_ERROR, error.message));
+  }
+}
 module.exports = {
   registerProduct,
   getProduct,
   updateProduct,
   deleteProduct,
-  getProductsById
+  getProductsById,
+  uploadProductImg,
+  getProductPhotograph
 };
