@@ -40,7 +40,7 @@ const uploadProductImg = async (req, res) => {
     const product = await Product.findOneAndUpdate(
       { productId: req.query.productId },
       {
-        image_link: `http://localhost:5000/v1/product/image?productId=${fileNameOfDOC}`,
+        image_link: `https://shoparel-production.up.railway.app/v1/product/image?productId=${fileNameOfDOC}`,
       }
     );
     if (!product) {
