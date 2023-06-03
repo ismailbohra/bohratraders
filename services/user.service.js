@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { userModel } = require("../models");
 const ApiError = require("../utils/ApiError");
-const {pick} = require("../utils/pick");
+const { pick } = require("../utils/pick");
 const { jwtEncode } = require("../middlewares/authorization");
 
 const registerUser = async (userBody) => {
@@ -70,26 +70,31 @@ const loginUserWithEmailAndPassword = async (email, password) => {
         httpStatus.OK,
         "Account Blocked..!! Please contact Support!"
       );
+    else if (user.status="VERIFICATION_PENDING")
+      throw new ApiError(
+        httpStatus.OK,
+        "Account Verification Pending..!! Please contact Admin!"
+      );
     else if (!(await user.isPasswordMatch(password)))
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
         "Login Failed! Incorrect password"
       );
     const token = jwtEncode(user.userId, email);
-    const userdata={
-      _id:user._id,
-        firstName:user.firstName,
-        lastName:user.lastName,
-        mobileNo:user.mobileNo,
-        email:user.email,
-        orders:user.orders,
-        role:user.role,
-        createdAt:user.createdAt,
-        updatedAt:user.updatedAt,
-        userId:user.userId,
-        __v:user.__v,
-        token:token
-    }
+    const userdata = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      mobileNo: user.mobileNo,
+      email: user.email,
+      orders: user.orders,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      userId: user.userId,
+      __v: user.__v,
+      token: token,
+    };
     return userdata;
   } catch (error) {
     console.error("Login by email service has error", error.message);
