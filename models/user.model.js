@@ -86,7 +86,7 @@ const userSchema = mongoose.Schema(
     },
     orders: [
       {
-        orderId: { type: String, unique: true, default: uuid },
+        orderId: { type: String, default: uuid },
         productList: [
           {
             productId: { type: String },
