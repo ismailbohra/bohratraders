@@ -78,7 +78,7 @@ const deleteProduct = async (req, res) => {
         successResponseGenerator(
           httpStatus.OK,
           "product removed Successful",
-          user.role
+          req.body.productId
         )
       );
   } catch (error) {
