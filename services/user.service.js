@@ -70,7 +70,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
         httpStatus.OK,
         "Account Blocked..!! Please contact Support!"
       );
-    else if (user.status==!"ACTIVE")
+    else if (user.status!=="ACTIVE")
       throw new ApiError(
         httpStatus.OK,
         `Account ${user.status}..!! Please contact Admin!`
