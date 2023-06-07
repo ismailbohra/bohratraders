@@ -33,7 +33,7 @@ app.use(compression());
 // enable cors
 // app.use(cors());
 // app.options('*', cors());
-const whitelist = ["http://localhost:3000"]
+const whitelist = ["http://localhost:3000","https://ismailbohra.github.io"]
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
