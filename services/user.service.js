@@ -70,10 +70,10 @@ const loginUserWithEmailAndPassword = async (email, password) => {
         httpStatus.OK,
         "Account Blocked..!! Please contact Support!"
       );
-    else if (user.status=="VERIFICATION_PENDING")
+    else if (user.status==!"ACTIVE")
       throw new ApiError(
         httpStatus.OK,
-        "Account Verification Pending..!! Please contact Admin!"
+        `Account ${user.status}..!! Please contact Admin!`
       );
     else if (!(await user.isPasswordMatch(password)))
       throw new ApiError(
